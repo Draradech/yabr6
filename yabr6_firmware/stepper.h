@@ -4,10 +4,11 @@
 class Stepper
 {
    public:
-      Stepper(int32_t period, uint8_t pinStep, uint8_t pinDir);
+      Stepper(int32_t period, uint8_t pinStep, uint8_t pinDir, bool inverted = false);
       void update();
-      void setAcc(int32_t acc); /* step / s^2 */
-      void setMaxSpeed(int32_t spd); /* step / s */
+      void reset();
+      void setAcc(int32_t acc);         /* step / s^2 */
+      void setMaxSpeed(int32_t spd);    /* step / s */
       void setTargetSpeed(int32_t spd); /* step / s */
       int32_t getSpeed();
       int32_t getPos();
@@ -25,4 +26,5 @@ class Stepper
 
       uint8_t _pinStep;
       uint8_t _pinDir;
+      bool _inverted;
 };

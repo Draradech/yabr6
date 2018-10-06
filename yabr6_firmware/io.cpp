@@ -17,11 +17,8 @@ struct
 
 IPAddress target(192, 168, 4, 2);
 WiFiUDP udp;
-uint8_t outputThrottle;
-int16_t promille;
-int16_t promilleMax;
-int16_t promilleMin;
-bool measurementOut;
+static uint8_t subLoop;
+static bool measurementOut;
 
 void setupInputOutput()
 {
@@ -32,13 +29,13 @@ void setupInputOutput()
 
 void loopInputOutput()
 {
-  outputThrottle++;
-  outputThrottle %= 5;
+  subLoop++;
+  subLoop %= 5;
 
   #define ENTRY(ID, var, rightshift, resolution, unit, name, minvalue, maxvalue)\
   case ID: dataout.data[c] = var >> rightshift; break;
 
-  if(outputThrottle == 0)
+  if(subLoop == 0)
   {
     if(measurementOut)
     {
@@ -60,8 +57,6 @@ void loopInputOutput()
       udp.write((uint8_t *)&dataout, sizeof(dataout));
       udp.endPacket();
     }
-    promilleMax = 0;
-    promilleMin = 1000;
   }
 
 
@@ -115,7 +110,5 @@ void loopInputOutput()
     }
   }
 
-  promille = (uint32_t)clk.value() * 1000 / clk.base();
-  promilleMax = MAX(promilleMax, promille);
-  promilleMin = MIN(promilleMin, promille);
+  sensorData.cpu[subLoop] = (uint32_t)clk.value() * 1000 / clk.base();
 }

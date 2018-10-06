@@ -11,6 +11,8 @@ void setupOta()
 
   ArduinoOTA.onStart([]() {
     clk.registerCallback(NULL);
+    digitalWrite(12, true); // deactivate steppers
+    ledColor(0,0,1);
   });
 
   ArduinoOTA.onEnd([]() {

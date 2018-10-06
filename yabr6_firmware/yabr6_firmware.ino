@@ -5,10 +5,12 @@ void setup()
   setupWifi();
   setupOta();
   setupInputOutput();
+  setupLed();
   setupClock();
   setupUltra();
   setupImu();
   setupStepper();
+  setupControl();
 }
 
 void loop()
@@ -17,7 +19,9 @@ void loop()
   {
     loopUltra();
     loopImu();
+    loopAttitude();
     loopControl();
+    loopStepper();
 
     loopInputOutput();
   }

@@ -1,9 +1,8 @@
 #include "stdinc.h"
 
-uint8_t state[3] = {0};
-uint16_t ultra[3] = {0};
-uint16_t ultrasave[3] = {0};
-uint8_t j = 0;
+static uint8_t  state[3] = {0};
+static uint16_t ultra[3] = {0};
+static uint8_t  ultraTimer = 0;
 
 void setupUltra()
 {
@@ -41,8 +40,8 @@ void IRAM_ATTR isrUltra()
     if(state[index] == 2 && !dr)
     {
       state[index] = 3;
-      ultrasave[index] = (ultra[index] <= ultrasave[index]) ? ultra[index] : (ultrasave[index] + 1);
-      ultrasave[index] = MIN(ultrasave[index], 100);
+      sensorData.dist[index] = (ultra[index] <= sensorData.dist[index]) ? MAX(ultra[index], sensorData.dist[index] - 10) : MIN(ultra[index], sensorData.dist[index] + 10);
+      sensorData.dist[index] = MIN(sensorData.dist[index], 100);
     }
 
     if(state[index] == 2) ultra[index]++;
@@ -51,9 +50,9 @@ void IRAM_ATTR isrUltra()
 
 void loopUltra()
 {
-  j++;
-  j %= 30;
-  if(j == 0)
+  ultraTimer++;
+  ultraTimer %= 30;
+  if(ultraTimer == 0)
   {
     state[0] = 0;
     state[1] = 0;

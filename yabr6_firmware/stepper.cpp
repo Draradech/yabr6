@@ -1,7 +1,7 @@
 #include <Arduino.h>
-#include "Stepper.h"
+#include "stepper.h"
 
-Stepper::Stepper(int32_t period, uint8_t pinStep, uint8_t pinDir)
+Stepper::Stepper(int32_t period, uint8_t pinStep, uint8_t pinDir, bool inverted)
 {
    int32_t updateRate = 1000000 / period;
    _spdRes = updateRate;
@@ -10,6 +10,7 @@ Stepper::Stepper(int32_t period, uint8_t pinStep, uint8_t pinDir)
    _mode = STP_ACC_MODE;
    _pinStep = pinStep;
    _pinDir = pinDir;
+   _inverted = inverted;
    pinMode(_pinStep, OUTPUT);
    pinMode(_pinDir, OUTPUT);
    digitalWrite(_pinStep, LOW);
@@ -47,7 +48,7 @@ void IRAM_ATTR Stepper::update()
    {
       _stp = _stp - _stpRes;
       _pos++;
-      digitalWrite(_pinDir, HIGH);
+      digitalWrite(_pinDir, !_inverted);
       delayMicroseconds(1);
       digitalWrite(_pinStep, HIGH);
    }
@@ -55,7 +56,7 @@ void IRAM_ATTR Stepper::update()
    {
       _stp = _stp + _stpRes;
       _pos--;
-      digitalWrite(_pinDir, LOW);
+      digitalWrite(_pinDir, _inverted);
       delayMicroseconds(1);
       digitalWrite(_pinStep, HIGH);
    }
@@ -64,6 +65,21 @@ void IRAM_ATTR Stepper::update()
 void Stepper::setAcc(int32_t acc)
 {
   _acc = acc;
+}
+
+void Stepper::reset(void)
+{
+  _stp = 0;
+  _spd = 0;
+  _pos = 0;
+  if (_mode == STP_ACC_MODE)
+  {
+    _acc = 0;
+  }
+  else if (_mode == STP_SPD_MODE)
+  {
+    _spdTrgt = 0;
+  }
 }
 
 void Stepper::setMaxSpeed(int32_t spd)

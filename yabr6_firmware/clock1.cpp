@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include "Clock1.h"
+#include "clock1.h"
 
 static uint8_t clock1_counter;
 static uint8_t clock1_trigger;
