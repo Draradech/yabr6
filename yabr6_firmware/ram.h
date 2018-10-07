@@ -44,6 +44,7 @@ typedef struct
   int16_t angleWP;
   int16_t speedP;
   int16_t speedI;
+  int16_t filterD;
 } SControlPara;
 
 typedef struct
