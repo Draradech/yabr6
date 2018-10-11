@@ -6,4 +6,5 @@ ENTRY('3', controlPara.angleD,      0,         1.0,      "",    "angle D",      
 ENTRY('4', controlPara.speedP,      0,         1.0,      "",    "speed P",                 -10000.0,   10000.0   )
 ENTRY('5', controlPara.speedI,      0,         1.0,      "",    "speed I",                 -10000.0,   10000.0   )
 ENTRY('6', controlPara.filterD,     0,         1.0,      "",    "speed I",                 -10000.0,   10000.0   )
+ENTRY('7', actuator.deactivated,    0,         1.0,      "",    "deactivate",              -10000.0,   10000.0   )
 ENTRY(0,   sensorData.voltage,      0,         0.0,     "-",    "Ende der Tabelle",             0.0,       0.0   )
